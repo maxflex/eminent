@@ -1,0 +1,39 @@
+header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 10px 20px 5px;
+  box-shadow: 0 0 8px 8px white;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+footer {
+  position: sticky !important;
+  bottom: 0;
+}
+
+.dialog-right {
+  width: 480px !important;
+  right: 0;
+  left: auto !important;
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+  &-transition {
+    &-enter-from,
+    &-leave-to {
+      transform: translateX(100%) !important;
+    }
+  }
+}
+
+.v-btn--active {
+  background: #0086bf !important;
+  color: white !important;
+}
