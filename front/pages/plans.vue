@@ -1,16 +1,16 @@
-<script setup type="ts">
+<script setup lang="ts">
 const planDialog = ref()
 const loadMoreRef = ref()
-const items = ref([])
+const items = ref<Plan[]>([])
 const loading = ref(false)
 const query = { page: 0, paginate: 20 }
-let observer
+let observer: any
 
-watch(() => loadMoreRef.value, el => {
+watch(loadMoreRef, (el) => {
   observer = new IntersectionObserver((entries) =>
     entries.forEach((entry) => entry.isIntersecting && loadMore(), {
       rootMargin: "-150px 0px 0px 0px",
-    })
+    }),
   )
   observer.observe(el)
 })
@@ -21,16 +21,19 @@ const loadMore = async () => {
   }
   loading.value = true
   query.page++
-  const { data } = await useHttp("plans", { query })
-  items.value = items.value.concat(data.value.data)
-  const { current_page: currentPage, last_page: lastPage } = data.value.meta
-  if (currentPage === lastPage) {
-    observer.unobserve()
+  const { data } = await useHttp<PlanResponse>("plans", { query })
+  if (data.value) {
+    const { data: plans, meta } = data.value
+    items.value = items.value.concat(plans)
+    if (meta.current_page === meta.last_page) {
+      observer.unobserve(loadMoreRef.value)
+    }
   }
   loading.value = false
 }
-</script>
 
+const onStore = (plan: Plan) => items.value.unshift(plan)
+</script>
 <template>
   <header>
     <v-btn icon>
@@ -47,7 +50,7 @@ const loadMore = async () => {
     <span ref="loadMoreRef" />
   </main>
   <client-only>
-    <PlanDialog ref="planDialog" />
+    <PlanDialog ref="planDialog" @store="onStore" />
   </client-only>
 </template>
 

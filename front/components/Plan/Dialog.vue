@@ -1,30 +1,33 @@
 <script setup lang="ts">
-const dialog = ref(false)
-let loading = ref(false)
+const emit = defineEmits<{
+  (event: "store", plan: Plan): void
+}>()
+const data = reactive({
+  loading: false,
+  dialog: false,
+})
 const form = reactive({
   title: "",
   comment: "",
 })
-const open = () => (dialog.value = true)
+const open = () => (data.dialog = true)
 const submit = async () => {
-  loading.value = true
-  const { data, error } = await useHttp("plans", {
+  data.loading = true
+  const { data: plan } = await useHttp("plans", {
     method: "POST",
     body: { ...form },
   })
-  loading.value = false
-  console.log(data.value, error.value)
+  emit("store", plan.value as Plan)
+  data.loading = false
+  data.dialog = false
 }
-
-// let errors = ref({})
-
 defineExpose({ open })
 </script>
 
 <template>
   <v-dialog
     fullscreen
-    v-model="dialog"
+    v-model="data.dialog"
     transition="dialog-right-transition"
     content-class="dialog-right"
   >
@@ -34,9 +37,9 @@ defineExpose({ open })
           <v-text-field v-model="form.title" label="Заголовок" />
           <v-text-field v-model="form.comment" label="Коммент" />
           <div class="text-center">
-            <v-btn color="primary" type="submit" :loading="loading"
-              >Войти</v-btn
-            >
+            <v-btn color="primary" type="submit" :loading="data.loading">
+              Добавить
+            </v-btn>
           </div>
         </form>
       </v-card-text>
