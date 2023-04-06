@@ -16,7 +16,7 @@
     "pinia": "^2.0.33",
     "sass": "^1.58.3",
     "vite-plugin-vuetify": "^1.0.2",
-    "vuetify": "^3.1.11"
+    "vuetify": "^3.1.13"
   },
   "overrides": {
     "vue": "latest"
