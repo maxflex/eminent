@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { type Dayjs } from "dayjs"
+const nuxtApp = useNuxtApp()
+const currentDate = ref<Dayjs>(nuxtApp.$dayjs())
 const planDialog = ref()
 const calendarDialog = ref()
 const loadMoreRef = ref()
@@ -33,6 +36,8 @@ const loadMore = async () => {
   loading.value = false
 }
 
+// const onDateInput = (date: Dayjs) => (currentDate.value = date)
+
 const onStore = (plan: Plan) => items.value.unshift(plan)
 </script>
 <template>
@@ -40,7 +45,7 @@ const onStore = (plan: Plan) => items.value.unshift(plan)
     <v-btn icon @click="calendarDialog.open()">
       <v-icon> jo-time-calendar-dates </v-icon>
     </v-btn>
-    <div>{{ $dayjs().format("dddd D MMMM") }}</div>
+    <div>{{ currentDate.format("dddd D MMMM") }}</div>
     <v-btn icon @click="() => planDialog.open()">
       <v-icon> jo-basic-plus </v-icon>
     </v-btn>
@@ -52,7 +57,7 @@ const onStore = (plan: Plan) => items.value.unshift(plan)
   </main>
   <client-only>
     <PlanDialog ref="planDialog" @store="onStore" />
-    <CalendarDialog ref="calendarDialog" />
+    <CalendarDialog ref="calendarDialog" v-model="currentDate" />
   </client-only>
 </template>
 

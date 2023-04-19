@@ -34,6 +34,35 @@ footer {
   }
 }
 
+.dialog-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 0;
+  display: flex;
+  justify-content: flex-end;
+  & > .v-btn {
+    margin-top: 8px;
+    margin-right: 20px;
+    background: transparent;
+  }
+  &:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 54px;
+    width: 100%;
+    // background: #f2f4f8;
+    background: white;
+    box-shadow: 0 0 10px 10px white;
+  }
+}
+
+.no-pointer-events {
+  pointer-events: none;
+}
+
 // .v-btn--active {
 //   background: #0086bf !important;
 //   color: white !important;
