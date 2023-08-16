@@ -4,9 +4,13 @@ interface User {
 }
 
 interface Plan {
-  id: number
-  title: number
+  id?: number
+  title: string
   comment: string
+  date: string
+  time?: string
+  is_finished: boolean
+  penalty?: number
 }
 
 interface Meta {

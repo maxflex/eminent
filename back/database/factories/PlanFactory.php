@@ -21,7 +21,7 @@ class PlanFactory extends Factory
             'user_id' => User::value('id'),
             'title' => fake()->realText(20),
             'comment' => fake()->realText(),
-            'pts' => mt_rand(1, 10) >= 8 ? null : fake()->numberBetween(1, 100),
+            'penalty' => mt_rand(1, 10) >= 8 ? null : fake()->numberBetween(1, 100),
             'is_finished' => mt_rand(1, 10) >= 8 ? 1 : 0,
         ];
     }

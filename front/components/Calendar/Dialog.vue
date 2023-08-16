@@ -1,16 +1,12 @@
 <script setup>
-// import { type Dayjs } from "dayjs"
-// const emit = defineEmits<{
-//   (event: "input", value: Dayjs): void
-// }>()
 const props = defineProps({
-  modelValue: Object,
+  modelValue: String,
 })
 const emit = defineEmits(["update:modelValue"])
-const nuxtApp = useNuxtApp()
+const { $dayjs } = useNuxtApp()
 const dialog = ref(false)
-const currentYear = parseInt(nuxtApp.$dayjs().format("YYYY"))
-const today = nuxtApp.$dayjs().format("YYYY-MM-DD")
+const currentYear = new Date().getFullYear()
+const today = $dayjs().format("YYYY-MM-DD")
 const monthLabels = [
   "январь",
   "февраль",
@@ -42,11 +38,10 @@ const daysInMonth = (year, month) => new Date(year, month, 0).getDate()
 const getDate = (year, month, day) =>
   [year, zeroPad(month), zeroPad(day)].join("-")
 const isToday = (year, month, day) => getDate(year, month, day) === today
-const isSelected = (year, month, day) => {
-  return getDate(year, month, day) === props.modelValue.format("YYYY-MM-DD")
-}
+const isSelected = (year, month, day) =>
+  getDate(year, month, day) === props.modelValue
 const onClick = (year, month, day) => {
-  emit("update:modelValue", nuxtApp.$dayjs(getDate(year, month, day)))
+  emit("update:modelValue", getDate(year, month, day))
   dialog.value = false
 }
 
@@ -156,7 +151,7 @@ defineExpose({ open })
       position: sticky;
       top: 18px;
       z-index: 99;
-      margin: 0 24px 18px;
+      margin-left: 18px;
       display: inline;
     }
   }

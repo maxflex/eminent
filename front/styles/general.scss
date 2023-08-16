@@ -21,6 +21,15 @@ footer {
   bottom: 0;
 }
 
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 .dialog-right {
   width: 480px !important;
   right: 0;
@@ -61,6 +70,57 @@ footer {
 
 .no-pointer-events {
   pointer-events: none;
+}
+
+.double-input {
+  display: flex;
+  & > div {
+    flex: 1;
+    &:first-child {
+      .v-field {
+        border-radius: 4px 0 0 4px !important;
+        &__outline__end {
+          border-right: none !important;
+        }
+      }
+    }
+    &:last-child {
+      .v-field {
+        border-radius: 0 4px 4px 0 !important;
+        &__outline__start {
+          border-left: none !important;
+        }
+      }
+    }
+  }
+}
+
+.preselects {
+  display: flex;
+  margin-left: 16px;
+  margin-top: 4px;
+  color: rgb(var(--v-theme-primary));
+  gap: 16px;
+  font-size: 0.8rem;
+  & > span {
+    cursor: pointer;
+  }
+}
+
+.cursor {
+  &--pointer {
+    cursor: pointer;
+    .v-field,
+    input {
+      cursor: pointer !important;
+    }
+  }
+}
+
+form {
+  & > div {
+    margin-bottom: 24px;
+  }
 }
 
 // .v-btn--active {

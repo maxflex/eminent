@@ -14,10 +14,6 @@ class PlanResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'comment' => $this->comment,
-        ];
+        return extract_fields($this, ['title', 'comment', 'date']);
     }
 }

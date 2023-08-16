@@ -182,6 +182,7 @@ return [
     'attributes' => [
         'email' => 'логин',
         'password' => 'пароль',
+        'title' => 'заголовок',
     ],
 
 ];

@@ -13,10 +13,11 @@
   "dependencies": {
     "@pinia/nuxt": "^0.4.7",
     "dayjs": "^1.11.7",
+    "maska": "^2.1.10",
     "pinia": "^2.0.33",
     "sass": "^1.58.3",
     "vite-plugin-vuetify": "^1.0.2",
-    "vuetify": "^3.1.13"
+    "vuetify": "^3.3.9"
   },
   "overrides": {
     "vue": "latest"

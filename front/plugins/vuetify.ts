@@ -18,11 +18,20 @@ export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
     defaults: {
       VBtn: {
+        size: "large",
         variant: "flat",
       },
       VSelect: {
         variant: "solo",
         density: "comfortable",
+        hideDetails: true,
+      },
+      VTextField: {
+        variant: "outlined",
+        hideDetails: true,
+      },
+      VTextarea: {
+        variant: "outlined",
         hideDetails: true,
       },
     },
