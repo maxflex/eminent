@@ -11,22 +11,21 @@ let errors = ref({})
 const cookieToken = useCookie("token")
 
 const submit = async () => {
-  loading = true
+  loading.value = true
   const { data, error } = await useHttp("auth/login", {
     method: "post",
     body: { ...form },
   })
-  if (error.value !== null) {
+  setTimeout(() => (loading.value = false), 300)
+  if (error.value) {
     errors.value = error.value.data.errors
-    console.log(errors)
-  } else {
-    const { user, token } = data.value
-    console.log(user, token)
-    cookieToken.value = token
-    $store.user = user
-    await navigateTo({ name: "index" })
+    return
   }
-  loading = false
+  const { user, token } = data.value
+  console.log(user, token)
+  cookieToken.value = token
+  $store.user = user
+  await navigateTo({ name: "index" })
 }
 
 definePageMeta({
@@ -36,8 +35,8 @@ definePageMeta({
 
 <template>
   <form @submit.prevent="submit()">
-    <div class="text-center">
-      <img src="/img/logo.png" />
+    <div class="text-center mb-0">
+      <img src="/img/logo.svg" />
     </div>
     <v-text-field
       variant="outlined"
@@ -52,8 +51,8 @@ definePageMeta({
       type="password"
       :error-messages="errors.password"
     />
-    <div class="text-center">
-      <v-btn color="primary" :loading="loading" type="submit">Войти</v-btn>
-    </div>
+    <v-btn color="primary" :loading="loading" block type="submit">
+      Войти
+    </v-btn>
   </form>
 </template>

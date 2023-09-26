@@ -5,12 +5,15 @@ const myTheme: ThemeDefinition = {
   colors: {
     background: "#FFFFFF",
     surface: "#FFFFFF",
-    primary: "#0086BF",
-    secondary: "#03DAC6",
-    error: "#B00020",
+    primary: "#f1e4a5",
+    accent: "#f47fcc",
+    secondary: "#008ecb",
+    error: "#ff7134",
     info: "#2196F3",
     success: "#4CAF50",
     warning: "#FB8C00",
+    orange: "#ff7134",
+    "on-surface": "#414141",
   },
 }
 
@@ -18,8 +21,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   const vuetify = createVuetify({
     defaults: {
       VBtn: {
-        size: "large",
         variant: "flat",
+        ripple: false,
       },
       VSelect: {
         variant: "solo",

@@ -1,14 +1,20 @@
 <template>
-  <v-app>
-    <div class="login-layout">
+  <v-app class="login-layout">
+    <div>
       <slot />
     </div>
   </v-app>
 </template>
 
 <style lang="scss">
-.login-layout {
-  background: linear-gradient(0deg, #f0faf8, #0086bf);
+.login-layout > div > div {
+  // background: linear-gradient(
+  //   to bottom,
+  //   #f1e4a5 0%,
+  //   black
+  // );
+  background-image: url("/img/sky-blurred.jpg");
+  background-size: cover;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -26,6 +32,8 @@
     img {
       width: 100px;
       margin: 0 auto 30px;
+      // filter: grayscale(100%);
+      // filter: sepia(60%);
     }
     & > .v-text-field {
       margin-bottom: 20px;

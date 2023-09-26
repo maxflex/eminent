@@ -1,60 +1,49 @@
 <script setup lang="ts">
 const { $dayjs } = useNuxtApp()
-const currentDate = ref($dayjs().format("YYYY-MM-DD"))
+const today = $dayjs().format("YYYY-MM-DD")
+const date = ref(today)
 const planDialog = ref()
 const calendarDialog = ref()
-const loadMoreRef = ref()
-const items = ref<Plan[]>([])
+const plans = ref<Plan[]>([])
 const loading = ref(false)
-const query = { page: 0, paginate: 20 }
-let observer: any
 
-watch(loadMoreRef, (el) => {
-  observer = new IntersectionObserver((entries) =>
-    entries.forEach((entry) => entry.isIntersecting && loadMore(), {
-      rootMargin: "-150px 0px 0px 0px",
-    }),
-  )
-  observer.observe(el)
-})
+const onStore = (plan: Plan) => plans.value.unshift(plan)
 
-const loadMore = async () => {
+const loadData = async () => {
   if (loading.value) {
     return
   }
   loading.value = true
-  query.page++
-  const { data } = await useHttp<PlanResponse>("plans", { query })
+  const params = isToday.value ? { today: 1 } : { date: date.value }
+  const { data } = await useHttp<PlanResponse>("plans", { params })
   if (data.value) {
-    const { data: plans, meta } = data.value
-    items.value = items.value.concat(plans)
-    if (meta.current_page === meta.last_page) {
-      observer.unobserve(loadMoreRef.value)
-    }
+    plans.value = data.value.data
   }
   loading.value = false
 }
 
-const onStore = (plan: Plan) => items.value.unshift(plan)
+const isToday = computed(() => date.value === today)
+watch(date, () => loadData())
+loadData()
 </script>
 <template>
   <header>
     <v-btn :size="48" icon @click="calendarDialog.open()">
       <v-icon> jo-time-calendar-dates </v-icon>
     </v-btn>
-    <div>{{ $dayjs(currentDate).format("dddd D MMMM") }}</div>
-    <v-btn :size="48" icon @click="() => planDialog.open(currentDate)">
+    <div class="text-grey">
+      {{ $dayjs(date).format("dddd D MMMM") }}
+    </div>
+    <v-btn :size="48" icon @click="() => planDialog.open(date)">
       <v-icon> jo-basic-plus </v-icon>
     </v-btn>
   </header>
   <main>
-    <UiLoader v-if="loading && items.length === 0" />
-    <PlanItem :item="item" v-for="item in items" :key="item.id" />
-    <span ref="loadMoreRef" />
+    <PlanItem :item="plan" v-for="plan in plans" :key="plan.id" />
   </main>
   <client-only>
     <PlanDialog ref="planDialog" @store="onStore" />
-    <CalendarDialog ref="calendarDialog" v-model="currentDate" />
+    <CalendarDialog ref="calendarDialog" v-model="date" />
   </client-only>
 </template>
 

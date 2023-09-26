@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            'email' => 'maxflex',
+            'email' => 'm@kolyadin.com',
             'password' => '$2y$10$enVbutuoSKd7..j./qK7ZOi/oDEs7Y7Hbaqfzj8w2TSNvOIShXORi'
         ]);
         Plan::factory(100)->create();

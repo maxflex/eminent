@@ -57,7 +57,7 @@ defineExpose({ open })
   >
     <v-card>
       <div class="dialog-header">
-        <v-btn icon @click="dialog = false">
+        <v-btn icon @click="dialog = false" :size="48">
           <v-icon>jo-basic-cross</v-icon>
         </v-btn>
       </div>
@@ -102,16 +102,18 @@ defineExpose({ open })
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin-top: 40px;
+  color: black;
+  max-width: var(--app-width);
   // padding-bottom: 40px;
   &__selected {
-    background: rgb(var(--v-theme-primary));
-    border-color: rgb(var(--v-theme-primary));
+    background: rgb(var(--v-theme-orange));
+    border-color: rgb(var(--v-theme-orange));
     color: white !important;
     pointer-events: none;
   }
   &__today {
-    color: rgb(var(--v-theme-primary));
-    border: 1px solid rgb(var(--v-theme-primary));
+    color: rgb(var(--v-theme-orange));
+    border: 1px solid rgb(var(--v-theme-orange));
   }
   &__month {
     padding: 0 12px;
@@ -153,6 +155,7 @@ defineExpose({ open })
       z-index: 99;
       margin-left: 18px;
       display: inline;
+      color: black;
     }
   }
 }

@@ -1,0 +1,8 @@
+.v-btn {
+  &--variant-flat {
+    --v-btn-height: 60px !important;
+    --v-btn-size: 1rem !important;
+    border-radius: 10em !important;
+    text-transform: none !important;
+  }
+}

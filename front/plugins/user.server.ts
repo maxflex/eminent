@@ -2,8 +2,8 @@ import { useMainStore } from "@/store"
 
 export default defineNuxtPlugin(async () => {
   const store = useMainStore()
-  const { data, error } = await useHttp("auth/user")
-  if (error.value === null) {
+  const { data } = await useHttp("auth/user")
+  if (data.value) {
     store.user = data.value.user
   }
 })

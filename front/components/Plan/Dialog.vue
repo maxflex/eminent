@@ -41,6 +41,7 @@ const submit = async () => {
 
 const finishBy = (value: OpUnitType) => {
   plan.date = $dayjs().endOf(value).format("YYYY-MM-DD")
+  plan.time = undefined
 }
 
 defineExpose({ open })
@@ -52,52 +53,58 @@ defineExpose({ open })
     fullscreen
     v-model="dialog"
     transition="dialog-right-transition"
-    content-class="dialog-right"
+    content-class="plan-dialog dialog-right"
   >
-    <v-card>
-      <v-card-text>
-        <form @submit.prevent="submit()">
-          <div class="mb-6">
-            <div class="double-input">
-              <div @click="calendarDialog.open()">
-                <v-text-field
-                  :model-value="$dayjs(plan.date).format('dddd D MMMM')"
-                  readonly
-                  label="Дата"
-                  class="cursor--pointer"
-                />
-              </div>
-              <v-text-field
-                v-model="plan.time"
-                label="Время"
-                v-maska:[timeMask]
-              />
-            </div>
-            <div class="preselects">
-              <span @click="finishBy('week')">на этой неделе</span>
-              <span @click="finishBy('month')">в этом месяце</span>
-            </div>
+    <form @submit.prevent="submit()">
+      <div class="mb-6">
+        <div class="double-input">
+          <div @click="calendarDialog.open()">
+            <v-text-field
+              :model-value="$dayjs(plan.date).format('dddd D MMMM')"
+              readonly
+              label="Дата"
+            />
           </div>
-          <v-text-field
-            v-model="plan.title"
-            label="Заголовок"
-            :error-messages="errorMessages.title"
-          />
-          <v-textarea v-model="plan.comment" label="Коммент" no-resize />
-          <v-text-field
-            color="error"
-            v-model="plan.penalty"
-            label="Штраф"
-            suffix="руб."
-            type="number"
-          />
-          <div class="text-center mt-6">
-            <v-btn block color="primary" type="submit" :loading="loading">
-              Добавить
-            </v-btn>
-          </div>
-        </form>
-      </v-card-text>
-    </v-card>
+          <v-text-field v-model="plan.time" label="Время" v-maska:[timeMask] />
+        </div>
+        <div class="preselects">
+          <span @click="finishBy('week')">на этой неделе</span>
+          <span @click="finishBy('month')">в этом месяце</span>
+        </div>
+      </div>
+      <v-text-field
+        v-model="plan.title"
+        label="Заголовок"
+        :error-messages="errorMessages.title"
+      />
+      <v-textarea v-model="plan.comment" label="Коммент" no-resize />
+      <v-text-field
+        color="error"
+        v-model="plan.penalty"
+        label="Штраф"
+        suffix="руб."
+        type="number"
+      />
+      <v-btn block color="primary" type="submit" :loading="loading">
+        Добавить
+      </v-btn>
+    </form>
   </v-dialog>
 </template>
+
+<style lang="scss">
+.plan-dialog {
+  .double-input {
+    & > div:first-child {
+      cursor: pointer;
+      .v-field,
+      input {
+        cursor: pointer !important;
+      }
+      .v-field__input {
+        padding-right: 0 !important;
+      }
+    }
+  }
+}
+</style>

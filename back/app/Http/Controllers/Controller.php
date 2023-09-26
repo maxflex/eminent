@@ -45,4 +45,22 @@ class Controller extends BaseController
         }
         return $resource;
     }
+
+    protected function filter(Request $request, &$query, array $filters = null)
+    {
+        $filters = $filters ?? $this->filters;
+        foreach ($filters as $type => $fields) {
+            foreach ($fields as $key_field => $field) {
+                $f = is_array($field) ? $key_field : $field;
+                if ($request->has($f)) {
+                    $this->{'filter' . ucfirst($type)}($query, $request->input($f), $field);
+                }
+            }
+        }
+    }
+
+    protected function filterEquals(&$query, $value, $field)
+    {
+        $query->where($field, $value);
+    }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="ui-loader">
     <v-progress-circular
-      :size="50"
+      :size="80"
       :width="4"
       indeterminate
     ></v-progress-circular>
