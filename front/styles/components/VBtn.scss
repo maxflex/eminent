@@ -1,5 +1,6 @@
 .v-btn {
-  &--variant-flat {
+  &--variant-flat,
+  &--variant-outlined {
     --v-btn-height: 60px !important;
     --v-btn-size: 1rem !important;
     border-radius: 10em !important;

@@ -3,6 +3,9 @@ const { items, isToday } = defineProps<{
   items: Plan[]
   isToday: Boolean
 }>()
+const emit = defineEmits<{
+  (event: "edit", plan: Plan): void
+}>()
 const { $dayjs } = useNuxtApp()
 const today = $dayjs().format("YYYY-MM-DD")
 const tomorrow = $dayjs().add(1, "day").format("YYYY-MM-DD")
@@ -57,7 +60,12 @@ const groups = computed(() => {
   <div class="plan-list">
     <div v-for="{ title, plans } in groups" :key="title">
       <h3 v-if="title">{{ title }}</h3>
-      <PlanItem :item="plan" v-for="plan in plans" :key="plan.id" />
+      <PlanItem
+        :item="plan"
+        v-for="plan in plans"
+        :key="plan.id"
+        @edit="emit('edit', plan)"
+      />
     </div>
   </div>
 </template>

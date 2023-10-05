@@ -3,31 +3,45 @@ import { OpUnitType } from "dayjs"
 import { vMaska } from "maska"
 
 const emit = defineEmits<{
-  (event: "store", plan: Plan): void
+  (event: "updated", plan: Plan): void
+  (event: "deleted", plan: Plan): void
 }>()
-const { $dayjs } = useNuxtApp()
+const { $dayjs, $today } = useNuxtApp()
 const timeMask = { mask: "##:##" }
 const calendarDialog = ref()
 const loading = ref(false)
+const deleting = ref(false)
 const dialog = ref(false)
 const errorMessages = ref<{ title?: string }>({})
-const plan = reactive<Plan>({
+let plan = reactive<Plan>({
   title: "",
   comment: "",
-  date: $dayjs().format("YYYY-MM-DD"),
+  date: $today,
   is_finished: false,
 })
 
 const open = (date: string) => {
   dialog.value = true
-  plan.date = date
+  plan = reactive({
+    date,
+    title: "",
+    comment: "",
+    is_finished: false,
+  })
 }
 
-const submit = async () => {
+const edit = (p: Plan) => {
+  plan = reactive({ ...p })
+  dialog.value = true
+}
+
+const storeOrUpdate = async () => {
   loading.value = true
   errorMessages.value = {}
-  const { data, error } = await useHttp("plans", {
-    method: "POST",
+  const url = plan.id ? `plans/${plan.id}` : `plans`
+  const method = plan.id ? "PUT" : "POST"
+  const { data, error } = await useHttp(url, {
+    method,
     body: { ...plan },
   })
   loading.value = false
@@ -35,7 +49,17 @@ const submit = async () => {
     errorMessages.value = error.value.data.errors
     return
   }
-  emit("store", data.value as Plan)
+  emit("updated", data.value as Plan)
+  dialog.value = false
+}
+
+const destroy = async function () {
+  deleting.value = true
+  await useHttp(`plans/${plan.id}`, {
+    method: "DELETE",
+  })
+  emit("deleted", plan)
+  deleting.value = false
   dialog.value = false
 }
 
@@ -44,7 +68,7 @@ const finishBy = (value: OpUnitType) => {
   plan.time = undefined
 }
 
-defineExpose({ open })
+defineExpose({ open, edit })
 </script>
 
 <template>
@@ -55,7 +79,7 @@ defineExpose({ open })
     transition="dialog-right-transition"
     content-class="plan-dialog dialog-right"
   >
-    <form @submit.prevent="submit()">
+    <form @submit.prevent="storeOrUpdate()">
       <div class="mb-6">
         <div class="double-input">
           <div @click="calendarDialog.open()">
@@ -86,7 +110,18 @@ defineExpose({ open })
         type="number"
       />
       <v-btn block color="primary" type="submit" :loading="loading">
-        Добавить
+        {{ plan.id ? "Сохранить" : "Добавить" }}
+      </v-btn>
+      <v-btn
+        variant="outlined"
+        class="mt-5"
+        v-if="plan.id"
+        block
+        color="error"
+        :loading="deleting"
+        @click="destroy()"
+      >
+        Удалить
       </v-btn>
     </form>
   </v-dialog>

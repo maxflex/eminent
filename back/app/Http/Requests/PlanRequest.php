@@ -14,8 +14,8 @@ class PlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => ['required', 'date_format:Y-m-d'],
-            'title' => ['required']
+            'date' => ['sometimes', 'required', 'date_format:Y-m-d'],
+            'title' => ['sometimes', 'required']
         ];
     }
 }

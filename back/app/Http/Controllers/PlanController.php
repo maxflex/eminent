@@ -21,6 +21,7 @@ class PlanController extends Controller
     public function index(Request $request)
     {
         $query = Plan::orderByRaw(<<<SQL
+            is_finished asc,
             if (`time` is null, '23:59:59', `time`) asc,
             if (`penalty` is null, 0, `penalty`) desc
         SQL);
@@ -32,6 +33,17 @@ class PlanController extends Controller
     {
         $plan = auth()->user()->plans()->create($request->all());
         return new PlanResource($plan);
+    }
+
+    public function update(Plan $plan, PlanRequest $request)
+    {
+        $plan->update($request->all());
+        return new PlanResource($plan);
+    }
+
+    public function destroy(Plan $plan)
+    {
+        $plan->delete();
     }
 
     protected function filterToday(&$query)

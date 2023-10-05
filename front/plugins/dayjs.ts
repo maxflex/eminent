@@ -11,6 +11,9 @@ dayjs.tz.setDefault("Europe/Moscow")
 
 export default defineNuxtPlugin(() => {
   return {
-    provide: { dayjs },
+    provide: {
+      dayjs,
+      today: dayjs().format("YYYY-MM-DD"),
+    },
   }
 })

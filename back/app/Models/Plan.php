@@ -9,10 +9,13 @@ class Plan extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'comment', 'date', 'time'];
+    protected $fillable = [
+        'title', 'comment', 'date', 'time', 'is_finished',
+        'penalty'
+    ];
 
     protected $casts = [
-        'date' => 'date'
+        'is_finished' => 'boolean'
     ];
 
     public function getTimeAttribute($value)

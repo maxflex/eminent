@@ -1,13 +1,23 @@
 <script setup lang="ts">
-const { $dayjs } = useNuxtApp()
-const today = $dayjs().format("YYYY-MM-DD")
-const date = ref(today)
+const { $dayjs, $today } = useNuxtApp()
+const date = ref($today)
 const planDialog = ref()
 const calendarDialog = ref()
 const plans = ref<Plan[]>([])
 const loading = ref(false)
 
-const onStore = (plan: Plan) => plans.value.unshift(plan)
+const onUpdated = (plan: Plan) => {
+  const index = plans.value.findIndex(({ id }) => plan.id === id)
+  if (index === -1) {
+    return plans.value.unshift(plan)
+  }
+  plans.value.splice(index, 1, plan)
+}
+
+const onDeleted = function (plan: Plan) {
+  const index = plans.value.findIndex(({ id }) => plan.id === id)
+  plans.value.splice(index, 1)
+}
 
 const loadData = async () => {
   if (loading.value) {
@@ -22,7 +32,7 @@ const loadData = async () => {
   loading.value = false
 }
 
-const isToday = computed(() => date.value === today)
+const isToday = computed(() => date.value === $today)
 watch(date, () => loadData())
 loadData()
 </script>
@@ -39,10 +49,15 @@ loadData()
     </v-btn>
   </header>
   <main>
-    <PlanList :items="plans" v-if="!loading" :is-today="isToday" />
+    <PlanList
+      :items="plans"
+      v-if="!loading"
+      :is-today="isToday"
+      @edit="(plan) => planDialog.edit(plan)"
+    />
   </main>
   <client-only>
-    <PlanDialog ref="planDialog" @store="onStore" />
+    <PlanDialog ref="planDialog" @updated="onUpdated" @deleted="onDeleted" />
     <CalendarDialog ref="calendarDialog" v-model="date" />
   </client-only>
 </template>
