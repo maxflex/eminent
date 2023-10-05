@@ -13,6 +13,7 @@ header {
   padding: 10px 20px 5px;
   // box-shadow: 0 0 8px 8px white;
   height: 54px;
+  z-index: 1;
   &:after {
     content: "";
     position: absolute;

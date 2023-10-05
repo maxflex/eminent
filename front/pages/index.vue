@@ -39,7 +39,7 @@ loadData()
     </v-btn>
   </header>
   <main>
-    <PlanItem :item="plan" v-for="plan in plans" :key="plan.id" />
+    <PlanList :items="plans" v-if="!loading" :is-today="isToday" />
   </main>
   <client-only>
     <PlanDialog ref="planDialog" @store="onStore" />

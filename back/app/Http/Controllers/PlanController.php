@@ -20,7 +20,10 @@ class PlanController extends Controller
 
     public function index(Request $request)
     {
-        $query = Plan::orderBy('id', 'desc');
+        $query = Plan::orderByRaw(<<<SQL
+            if (`time` is null, '23:59:59', `time`) asc,
+            if (`penalty` is null, 0, `penalty`) desc
+        SQL);
         $this->filter($request, $query);
         return $this->handleIndexRequest($request, $query);
     }
@@ -33,8 +36,19 @@ class PlanController extends Controller
 
     protected function filterToday(&$query)
     {
+        // test
+        // return $query->whereRaw(<<<SQL
+        //     `date` between '2023-08-16' and '2023-08-31'
+        // SQL);
+
+        // last_day(now()) – конец месяца
+        // DATE(NOW() + INTERVAL (6 - WEEKDAY(NOW())) DAY) – конец недели
+        // бывает такое, что конец недели больше, чем конец месяца
         $query->whereRaw(<<<SQL
-            `date` between date(now()) and last_day(now())
+            `date` between date(now()) and greatest(
+                last_day(now()),
+                DATE(NOW() + INTERVAL (6 - WEEKDAY(NOW())) DAY)
+            )
         SQL);
     }
 }

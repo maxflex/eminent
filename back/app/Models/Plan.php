@@ -15,8 +15,11 @@ class Plan extends Model
         'date' => 'date'
     ];
 
-    // public function setDateAttribute($value)
-    // {
-    //     logger("date:" . $value);
-    // }
+    public function getTimeAttribute($value)
+    {
+        if (!$value) {
+            return null;
+        }
+        return substr($value, 0, 5);
+    }
 }
