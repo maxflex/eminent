@@ -11,7 +11,7 @@ const myTheme: ThemeDefinition = {
     error: "#ff7134",
     info: "#2196f3",
     success: "#4caf50",
-    warning: "#fb8c00",
+    warning: "#ff4600",
     orange: "#ff7134",
     grey: "#9e9e9e",
     "on-surface": "#414141",

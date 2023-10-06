@@ -122,7 +122,7 @@ const rub = (value: Number) =>
         height: 2px;
         top: 14px;
         left: 0;
-        background: rgba(var(--v-theme-error), 0.8);
+        background: rgba(var(--v-theme-warning), 0.8);
         border-radius: 8px;
       }
     }
