@@ -58,7 +58,7 @@ loadData()
   </main>
   <client-only>
     <PlanDialog ref="planDialog" @updated="onUpdated" @deleted="onDeleted" />
-    <CalendarDialog ref="calendarDialog" v-model="date" />
+    <CalendarDialog ref="calendarDialog" v-model="date" load-events />
   </client-only>
 </template>
 

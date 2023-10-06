@@ -46,6 +46,17 @@ class PlanController extends Controller
         $plan->delete();
     }
 
+    public function events()
+    {
+        return Plan::query()
+            ->selectRaw(<<<SQL
+                `date`,
+                cast(sum(if(is_finished = 0, 1, 0)) as unsigned) as unfinished
+            SQL)
+            ->groupBy('date')
+            ->pluck('unfinished', 'date');
+    }
+
     protected function filterToday(&$query)
     {
         // test

@@ -1,12 +1,13 @@
 <script setup>
 const props = defineProps({
   modelValue: String,
+  loadEvents: Boolean,
 })
 const emit = defineEmits(["update:modelValue"])
-const { $dayjs } = useNuxtApp()
+const { $today } = useNuxtApp()
 const dialog = ref(false)
 const currentYear = new Date().getFullYear()
-const today = $dayjs().format("YYYY-MM-DD")
+let events = ref({})
 const monthLabels = [
   "январь",
   "февраль",
@@ -23,10 +24,13 @@ const monthLabels = [
 ]
 const open = () => {
   dialog.value = true
+  if (props.loadEvents) {
+    loadEvents()
+  }
   setTimeout(
     () =>
       document
-        .querySelector(".calendar__selected")
+        .querySelector(".calendar--selected")
         .scrollIntoView({ block: "center" }),
     100,
   )
@@ -37,12 +41,19 @@ const firstDayOfWeek = (year, month) => new Date(year, month - 1, 0).getDay()
 const daysInMonth = (year, month) => new Date(year, month, 0).getDate()
 const getDate = (year, month, day) =>
   [year, zeroPad(month), zeroPad(day)].join("-")
-const isToday = (year, month, day) => getDate(year, month, day) === today
+const isToday = (year, month, day) => getDate(year, month, day) === $today
 const isSelected = (year, month, day) =>
   getDate(year, month, day) === props.modelValue
 const onClick = (year, month, day) => {
   emit("update:modelValue", getDate(year, month, day))
   dialog.value = false
+}
+
+const loadEvents = async function () {
+  const { data } = await useHttp("plans/events", {
+    method: "GET",
+  })
+  events.value = data.value
 }
 
 defineExpose({ open })
@@ -81,8 +92,15 @@ defineExpose({ open })
                 v-for="day in daysInMonth(year, month)"
                 :key="day"
                 :class="{
-                  calendar__today: isToday(year, month, day),
-                  calendar__selected: isSelected(year, month, day),
+                  'calendar--today': isToday(year, month, day),
+                  'calendar--selected': isSelected(year, month, day),
+                  'calendar--has-events': getDate(year, month, day) in events,
+                  'calendar--has-unfinished-events':
+                    !!events[getDate(year, month, day)] &&
+                    getDate(year, month, day) < $today,
+                  'calendar--has-planned-events':
+                    !!events[getDate(year, month, day)] &&
+                    getDate(year, month, day) >= $today,
                 }"
                 @click="onClick(year, month, day)"
               >
@@ -105,15 +123,41 @@ defineExpose({ open })
   color: black;
   max-width: var(--app-width);
   // padding-bottom: 40px;
-  &__selected {
-    background: rgb(var(--v-theme-orange));
-    border-color: rgb(var(--v-theme-orange));
+  &--selected {
+    background: rgb(var(--v-theme-on-surface));
+    border-color: rgb(var(--v-theme-on-surface));
     color: white !important;
     pointer-events: none;
   }
-  &__today {
-    color: rgb(var(--v-theme-orange));
-    border: 1px solid rgb(var(--v-theme-orange));
+  &--today {
+    color: rgb(var(--v-theme-on-surface));
+    border: 1px solid rgb(var(--v-theme-on-surface));
+  }
+  &--has-events {
+    &:before {
+      content: "";
+      $size: 8px;
+      height: $size;
+      width: $size;
+      border-radius: 50%;
+      // background: rgb(var(--v-theme-grey));
+      // background: #b6b6b6;
+      background: #cfcece;
+      border: 1px solid white;
+      position: absolute;
+      left: 30px;
+      top: 2px;
+    }
+  }
+  &--has-unfinished-events {
+    &:before {
+      background: rgb(var(--v-theme-error));
+    }
+  }
+  &--has-planned-events {
+    &:before {
+      background: rgb(var(--v-theme-success));
+    }
   }
   &__month {
     padding: 0 12px;
@@ -142,6 +186,7 @@ defineExpose({ open })
         // transition: background linear 0.1s;
         letter-spacing: 0.0892857143em;
         text-indent: 0.0892857143em;
+        position: relative;
         &:hover {
           background: rgb(var(--v-theme-on-surface-variant));
         }

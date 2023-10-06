@@ -59,9 +59,10 @@ const rub = (value: Number) =>
   margin: 16px 0;
   position: relative;
   &--finished {
-    .v-checkbox {
-      label {
-        color: rgb(var(--v-theme-grey));
+    label {
+      color: rgb(var(--v-theme-grey));
+      &:before {
+        width: 100% !important;
       }
     }
     #{$e}-info-penalty {
@@ -69,6 +70,7 @@ const rub = (value: Number) =>
     }
   }
   &--unfinished {
+    label,
     #{$e}-info-penalty {
       color: rgb(var(--v-theme-error)) !important;
     }
@@ -107,10 +109,22 @@ const rub = (value: Number) =>
       transition: $transition;
     }
     label {
-      opacity: 1;
       transition: $transition;
+      opacity: 1;
       margin-left: 10px;
       font-size: 1.17rem;
+      position: relative;
+      &:before {
+        transition: $transition;
+        content: "";
+        position: absolute;
+        width: 0%;
+        height: 2px;
+        top: 14px;
+        left: 0;
+        background: rgba(var(--v-theme-error), 0.8);
+        border-radius: 8px;
+      }
     }
   }
 }

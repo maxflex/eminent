@@ -10,5 +10,6 @@ Route::controller(AuthController::class)->prefix('auth')->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('auth/user', [AuthController::class, 'user']);
+    Route::get('plans/events', [PlanController::class, 'events']);
     Route::apiResource('plans', PlanController::class);
 });
